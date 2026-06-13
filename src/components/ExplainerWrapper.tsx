@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { IExplainerConcept } from "@/types/explainer";
 import GravityScene from "./simulations/GravityScene";
 import NetworkingScene from "./simulations/NetworkingScene";
@@ -11,6 +12,15 @@ import DatabaseScene from "./simulations/DatabaseScene";
 interface ExplainerWrapperProps {
   concept: IExplainerConcept;
 }
+
+const stepVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
 
 export default function ExplainerWrapper({ concept }: ExplainerWrapperProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -76,12 +86,12 @@ export default function ExplainerWrapper({ concept }: ExplainerWrapperProps) {
       </div>
 
       <header className="fixed top-6 left-6 right-6 md:right-auto md:w-[calc(50%-48px)] z-20 flex justify-between items-center bg-[#09090b]/40 border border-white/5 backdrop-blur-md px-6 py-3 rounded-full shadow-lg">
-        <a href="/" className="font-semibold text-sm tracking-wide text-white focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2">
+        <a href="/" className="font-semibold text-sm tracking-tight text-white focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2">
           {concept.title}
         </a>
         <a
           href="/"
-          className="px-4 py-1.5 rounded-full text-xs font-semibold bg-neutral-900 border border-neutral-800 text-neutral-300 hover:bg-neutral-800 transition-all focus:outline-none focus:ring-2 focus:ring-neutral-700"
+          className="px-4 py-1.5 rounded-full text-xs font-semibold bg-neutral-900 border border-neutral-800 text-neutral-300 hover:bg-neutral-800 hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-neutral-700"
         >
           Back
         </a>
@@ -89,33 +99,37 @@ export default function ExplainerWrapper({ concept }: ExplainerWrapperProps) {
 
       <div className="relative z-10 w-full md:w-1/2 min-h-full flex flex-col justify-start px-6 md:px-16 py-32 md:py-48 gap-48 pointer-events-none">
         {concept.scrollSteps.map((step, idx) => (
-          <section
+          <motion.section
             key={idx}
+            variants={stepVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
             className="w-full min-h-[60vh] flex flex-col justify-center items-start gap-4 select-none"
           >
             <span className="text-xs font-mono tracking-widest text-neutral-500 uppercase">
               Step {idx + 1}
             </span>
-            <h2 className="text-3xl md:text-4xl font-light tracking-tight text-white mb-2">
+            <h2 className="text-3xl md:text-4xl font-light tracking-tight text-white mb-2 leading-[1.1]">
               {step.description}
             </h2>
             <p className="text-neutral-400 text-sm md:text-base font-light leading-relaxed max-w-lg">
               Scroll to move through the explanation, or adjust the controls to explore on your own.
             </p>
-          </section>
+          </motion.section>
         ))}
       </div>
 
       <div className="fixed bottom-6 right-6 left-6 md:left-auto md:w-[calc(50%-48px)] z-20 bg-[#09090b]/75 border border-white/5 backdrop-blur-xl p-6 rounded-2xl shadow-2xl flex flex-col gap-4 pointer-events-auto">
         <div className="flex justify-between items-center border-b border-white/5 pb-3">
-          <h3 className="text-sm font-semibold tracking-wider text-white uppercase font-mono">Controls</h3>
+          <h3 className="text-sm font-semibold tracking-tight text-white font-sans">Controls</h3>
           {concept.presets.length > 0 && (
             <div className="flex gap-2">
               {concept.presets.map((preset, idx) => (
                 <button
                   key={idx}
                   onClick={() => loadPreset(preset.values)}
-                  className="px-2.5 py-1 rounded-md text-[10px] font-semibold bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 transition focus:outline-none"
+                  className="px-3 py-1 rounded-md text-[11px] font-medium bg-neutral-800/50 border border-white/[0.06] text-neutral-400 hover:bg-neutral-700/50 hover:text-white transition-all duration-200 focus:outline-none"
                   title={preset.description}
                 >
                   {preset.name}
