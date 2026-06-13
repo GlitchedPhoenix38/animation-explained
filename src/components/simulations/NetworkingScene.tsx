@@ -60,15 +60,21 @@ export default function NetworkingScene({ params, scrollProgress }: NetworkingSc
     ];
 
     const nodes: Node[] = [];
-    const nodeGeom = new THREE.SphereGeometry(2.5, 16, 16);
+    const sphereGeom = new THREE.SphereGeometry(2.2, 12, 12);
+    const boxGeom = new THREE.BoxGeometry(3.5, 3.5, 3.5);
 
     nodeCoords.forEach((coord, idx) => {
-      // Glow wireframe mesh
+      // Differentiate client/server geometrically (cubes) vs routers (spheres)
+      const isEndpoint = idx === 0 || idx === 5;
+      const geom = isEndpoint ? boxGeom : sphereGeom;
+      
       const mat = new THREE.MeshBasicMaterial({
-        color: idx === 0 ? "#06b6d4" : idx === 5 ? "#22c55e" : "#3b82f6",
+        color: isEndpoint ? "#ffffff" : "#888888",
         wireframe: true,
+        transparent: true,
+        opacity: isEndpoint ? 0.6 : 0.35,
       });
-      const mesh = new THREE.Mesh(nodeGeom, mat);
+      const mesh = new THREE.Mesh(geom, mat);
       mesh.position.set(coord.x, coord.y, coord.z);
       scene.add(mesh);
       nodes.push({ mesh, id: idx, label: coord.label });
@@ -88,9 +94,9 @@ export default function NetworkingScene({ params, scrollProgress }: NetworkingSc
 
       const pathGeom = new THREE.BufferGeometry().setFromPoints([fromNode, toNode]);
       const pathMat = new THREE.LineBasicMaterial({
-        color: "#1e293b",
+        color: "#ffffff",
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.12,
       });
       const line = new THREE.Line(pathGeom, pathMat);
       scene.add(line);
@@ -98,7 +104,7 @@ export default function NetworkingScene({ params, scrollProgress }: NetworkingSc
     });
 
     // 4. Packet Particles Engine
-    const packetCount = 200;
+    const packetCount = 120;
     const packetGeom = new THREE.BufferGeometry();
     const packetPositions = new Float32Array(packetCount * 3);
     const packetProgress = new Float32Array(packetCount);
@@ -111,11 +117,10 @@ export default function NetworkingScene({ params, scrollProgress }: NetworkingSc
 
     packetGeom.setAttribute("position", new THREE.BufferAttribute(packetPositions, 3));
     const packetMat = new THREE.PointsMaterial({
-      size: 0.8,
-      color: "#06b6d4",
+      size: 0.5,
+      color: "#ffffff",
       transparent: true,
-      opacity: 0.9,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.8,
     });
     const packetSystem = new THREE.Points(packetGeom, packetMat);
     scene.add(packetSystem);
@@ -180,7 +185,8 @@ export default function NetworkingScene({ params, scrollProgress }: NetworkingSc
     return () => {
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animId);
-      nodeGeom.dispose();
+      sphereGeom.dispose();
+      boxGeom.dispose();
       packetGeom.dispose();
       packetMat.dispose();
       renderer.dispose();

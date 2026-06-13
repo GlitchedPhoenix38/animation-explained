@@ -64,8 +64,10 @@ export default function MLScene({ params, scrollProgress }: MLSceneProps) {
         const y = (nIdx - (size - 1) / 2) * nodeSpacing;
         
         const mat = new THREE.MeshBasicMaterial({
-          color: lIdx === 0 ? "#ec4899" : lIdx === 1 ? "#3b82f6" : "#22c55e",
+          color: lIdx === 1 ? "#888888" : "#ffffff",
           wireframe: true,
+          transparent: true,
+          opacity: lIdx === 1 ? 0.35 : 0.6,
         });
         const mesh = new THREE.Mesh(neuronGeom, mat);
         mesh.position.set(x, y, 0);
@@ -87,9 +89,9 @@ export default function MLScene({ params, scrollProgress }: MLSceneProps) {
           const lineGeom = new THREE.BufferGeometry().setFromPoints([fromPos, toPos]);
           const weight = Math.random(); // Initial random weight
           const lineMat = new THREE.LineBasicMaterial({
-            color: "#e2e8f0",
+            color: "#ffffff",
             transparent: true,
-            opacity: 0.1 + weight * 0.4,
+            opacity: 0.04 + weight * 0.1,
           });
           const line = new THREE.Line(lineGeom, lineMat);
           scene.add(line);
@@ -100,7 +102,7 @@ export default function MLScene({ params, scrollProgress }: MLSceneProps) {
     });
 
     // 4. Signal Wave Particles (Feedforward flow)
-    const signalCount = 80;
+    const signalCount = 60;
     const signalGeom = new THREE.BufferGeometry();
     const signalPositions = new Float32Array(signalCount * 3);
     const signalProgress = new Float32Array(signalCount);
@@ -113,10 +115,10 @@ export default function MLScene({ params, scrollProgress }: MLSceneProps) {
 
     signalGeom.setAttribute("position", new THREE.BufferAttribute(signalPositions, 3));
     const signalMat = new THREE.PointsMaterial({
-      size: 0.8,
-      color: "#ec4899", // Magenta/pink signal pulse
+      size: 0.5,
+      color: "#ffffff",
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.8,
     });
     const signalSystem = new THREE.Points(signalGeom, signalMat);
     scene.add(signalSystem);
@@ -139,7 +141,7 @@ export default function MLScene({ params, scrollProgress }: MLSceneProps) {
         }
 
         const synIdx = signalSynapseIndices[i];
-        const { from, to, weight } = synapses[synIdx];
+        const { from, to } = synapses[synIdx];
 
         const fromPos = from.mesh.position;
         const toPos = to.mesh.position;
@@ -148,11 +150,6 @@ export default function MLScene({ params, scrollProgress }: MLSceneProps) {
         arr[i * 3] = fromPos.x + (toPos.x - fromPos.x) * t;
         arr[i * 3 + 1] = fromPos.y + (toPos.y - fromPos.y) * t;
         arr[i * 3 + 2] = fromPos.z + (toPos.z - fromPos.z) * t;
-
-        // Change colors dynamic base on learning weights
-        const activeColor = new THREE.Color();
-        activeColor.lerpColors(new THREE.Color("#ec4899"), new THREE.Color("#22c55e"), weight);
-        signalMat.color = activeColor;
       }
       signalGeom.attributes.position.needsUpdate = true;
 

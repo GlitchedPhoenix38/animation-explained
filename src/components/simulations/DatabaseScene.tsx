@@ -58,9 +58,9 @@ export default function DatabaseScene({ params, scrollProgress }: DatabaseSceneP
     const sheetGeom = new THREE.PlaneGeometry(tableWidth, tableHeight);
 
     const positions = [
-      { x: -18, y: 3, z: -5, color: "#3b82f6" }, // Users Table (Blue)
-      { x: 0, y: -2, z: 5, color: "#22c55e" },   // Orders Table (Green)
-      { x: 18, y: 4, z: -5, color: "#ec4899" },  // Products Table (Pink)
+      { x: -18, y: 3, z: -5, color: "#ffffff" }, // Users Table
+      { x: 0, y: -2, z: 5, color: "#ffffff" },   // Orders Table
+      { x: 18, y: 4, z: -5, color: "#888888" },  // Products Table
     ];
 
     positions.forEach((pos, idx) => {
@@ -68,7 +68,7 @@ export default function DatabaseScene({ params, scrollProgress }: DatabaseSceneP
         color: pos.color,
         wireframe: true,
         transparent: true,
-        opacity: 0.15,
+        opacity: idx === 2 ? 0.08 : 0.15,
         side: THREE.DoubleSide,
       });
       const mesh = new THREE.Mesh(sheetGeom, sheetMat);
@@ -79,8 +79,8 @@ export default function DatabaseScene({ params, scrollProgress }: DatabaseSceneP
 
     // 3. Connective Relation Splines (Foreign key relations)
     const relationships = [
-      { from: 0, fromY: 4, to: 1, toY: 0, color: "#3b82f6" }, // User ID -> Orders
-      { from: 2, fromY: -2, to: 1, toY: -4, color: "#ec4899" }, // Product ID -> Orders
+      { from: 0, fromY: 4, to: 1, toY: 0, color: "#ffffff" }, // User ID -> Orders
+      { from: 2, fromY: -2, to: 1, toY: -4, color: "#ffffff" }, // Product ID -> Orders
     ];
 
     const splineLines: THREE.Line[] = [];
@@ -103,7 +103,7 @@ export default function DatabaseScene({ params, scrollProgress }: DatabaseSceneP
       const curveMat = new THREE.LineBasicMaterial({
         color: rel.color,
         transparent: true,
-        opacity: 0.5,
+        opacity: 0.15,
       });
       const line = new THREE.Line(curveGeom, curveMat);
       scene.add(line);
@@ -111,7 +111,7 @@ export default function DatabaseScene({ params, scrollProgress }: DatabaseSceneP
     });
 
     // 4. Data Query particles (moving along relation lines)
-    const queryCount = 40;
+    const queryCount = 20;
     const queryGeom = new THREE.BufferGeometry();
     const queryPositions = new Float32Array(queryCount * 3);
     const queryProgress = new Float32Array(queryCount);
@@ -124,11 +124,10 @@ export default function DatabaseScene({ params, scrollProgress }: DatabaseSceneP
 
     queryGeom.setAttribute("position", new THREE.BufferAttribute(queryPositions, 3));
     const queryMat = new THREE.PointsMaterial({
-      size: 0.9,
-      color: "#22c55e",
+      size: 0.6,
+      color: "#ffffff",
       transparent: true,
-      opacity: 0.9,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.8,
     });
     const querySystem = new THREE.Points(queryGeom, queryMat);
     scene.add(querySystem);

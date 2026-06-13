@@ -82,8 +82,10 @@ export default function SortingScene({ params, scrollProgress }: SortingScenePro
 
     arr.forEach((val, idx) => {
       const colMat = new THREE.MeshBasicMaterial({
-        color: new THREE.Color().setHSL(0.7 - (val / count) * 0.4, 0.8, 0.5), // Hue scale matching sorting heights
+        color: "#888888",
         wireframe: true,
+        transparent: true,
+        opacity: 0.25,
       });
       const mesh = new THREE.Mesh(colGeom, colMat);
       mesh.scale.y = val * 1.5; // Scale height proportional to array value
@@ -102,6 +104,13 @@ export default function SortingScene({ params, scrollProgress }: SortingScenePro
 
       stepTimer += speedRef.current;
       
+      // Reset all columns to inactive state
+      columns.forEach((col) => {
+        const mat = col.material as THREE.MeshBasicMaterial;
+        mat.color.set("#888888");
+        mat.opacity = 0.25;
+      });
+      
       // Perform simple sorting steps in rendering tick
       if (stepTimer > 20 && count > 1) {
         stepTimer = 0;
@@ -112,25 +121,27 @@ export default function SortingScene({ params, scrollProgress }: SortingScenePro
           const val1 = arr[j];
           const val2 = arr[j + 1];
 
+          // Highlight the columns being compared
+          const mat1 = columns[j].material as THREE.MeshBasicMaterial;
+          const mat2 = columns[j + 1].material as THREE.MeshBasicMaterial;
+          mat1.color.set("#ffffff");
+          mat1.opacity = 0.9;
+          mat2.color.set("#ffffff");
+          mat2.opacity = 0.9;
+
           if (val1 > val2) {
             // Swap array values
             arr[j] = val2;
             arr[j + 1] = val1;
             swapped = true;
 
-            // Swap visual heights & HSL huestates dynamically
+            // Swap visual heights dynamically
             const tempScale = columns[j].scale.y;
             columns[j].scale.y = columns[j + 1].scale.y;
             columns[j + 1].scale.y = tempScale;
 
             columns[j].position.y = columns[j].scale.y / 2;
             columns[j + 1].position.y = columns[j + 1].scale.y / 2;
-
-            const tempColor = (columns[j].material as THREE.MeshBasicMaterial).color.getHex();
-            (columns[j].material as THREE.MeshBasicMaterial).color.setHex(
-              (columns[j + 1].material as THREE.MeshBasicMaterial).color.getHex()
-            );
-            (columns[j + 1].material as THREE.MeshBasicMaterial).color.setHex(tempColor);
             break;
           }
         }

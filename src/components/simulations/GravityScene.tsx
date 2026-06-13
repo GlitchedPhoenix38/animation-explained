@@ -50,17 +50,19 @@ export default function GravityScene({ params, scrollProgress }: GravityScenePro
     rendererRef.current = renderer;
 
     // 2. Add Gravitational Center (Sun/Star)
-    const sunGeom = new THREE.SphereGeometry(4, 32, 32);
+    const sunGeom = new THREE.SphereGeometry(4, 24, 24);
     const sunMat = new THREE.MeshBasicMaterial({
-      color: "#f59e0b",
+      color: "#ffffff",
       wireframe: true,
+      transparent: true,
+      opacity: 0.4
     });
     const sunMesh = new THREE.Mesh(sunGeom, sunMat);
     scene.add(sunMesh);
 
-    // Glowing core glow
-    const coreGeom = new THREE.SphereGeometry(3.2, 16, 16);
-    const coreMat = new THREE.MeshBasicMaterial({ color: "#fff" });
+    // Glowing core
+    const coreGeom = new THREE.SphereGeometry(2.5, 16, 16);
+    const coreMat = new THREE.MeshBasicMaterial({ color: "#ffffff" });
     const coreMesh = new THREE.Mesh(coreGeom, coreMat);
     scene.add(coreMesh);
 
@@ -72,10 +74,10 @@ export default function GravityScene({ params, scrollProgress }: GravityScenePro
     gridGeomRef.current = gridGeom;
 
     const gridMat = new THREE.MeshBasicMaterial({
-      color: "#3b82f6",
+      color: "#ffffff",
       wireframe: true,
       transparent: true,
-      opacity: 0.15,
+      opacity: 0.06,
     });
     const gridMesh = new THREE.Mesh(gridGeom, gridMat);
     gridMesh.position.y = -6;
@@ -86,28 +88,27 @@ export default function GravityScene({ params, scrollProgress }: GravityScenePro
 
     // 4. Orbiting planet particles
     const orbitRadius = 20;
-    const planetGeom = new THREE.SphereGeometry(1.2, 16, 16);
-    const planetMat = new THREE.MeshBasicMaterial({ color: "#06b6d4", wireframe: true });
+    const planetGeom = new THREE.SphereGeometry(1.0, 16, 16);
+    const planetMat = new THREE.MeshBasicMaterial({ color: "#ffffff", wireframe: true });
     const planetMesh = new THREE.Mesh(planetGeom, planetMat);
     scene.add(planetMesh);
 
-    // Trail particles
+    // Trail line (replacing points for a cleaner vector look)
     const trailCount = 100;
     const trailGeom = new THREE.BufferGeometry();
     const trailPositions = new Float32Array(trailCount * 3);
     trailGeom.setAttribute("position", new THREE.BufferAttribute(trailPositions, 3));
-    const trailMat = new THREE.PointsMaterial({
-      size: 0.4,
-      color: "#06b6d4",
+    const trailMat = new THREE.LineBasicMaterial({
+      color: "#ffffff",
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.25,
     });
-    const trailPoints = new THREE.Points(trailGeom, trailMat);
+    const trailPoints = new THREE.Line(trailGeom, trailMat);
     scene.add(trailPoints);
     const trailHistory: THREE.Vector3[] = [];
 
     // Ambient Lighting
-    const pointLight = new THREE.PointLight("#f59e0b", 4, 100);
+    const pointLight = new THREE.PointLight("#ffffff", 3, 100);
     pointLight.position.set(0, 0, 0);
     scene.add(pointLight);
 
