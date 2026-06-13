@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AXIOM - Visual Explanatory Engine",
-  description: "Observe physics, algorithms, and networking concepts through interactive, real-time WebGL motion simulations.",
+  title: "Interactive Visual Explainers",
+  description: "Explore physics, algorithms, and networking through interactive simulations you can control.",
 };
 
 export default function RootLayout({
