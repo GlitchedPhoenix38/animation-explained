@@ -18,7 +18,7 @@ export default function CursorLab() {
   const [enabled, setEnabled] = useState(true);
   const [position, setPosition] = useState({ x: 50, y: 50 });
   const [copied, setCopied] = useState(false);
-  const stageRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const trailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
