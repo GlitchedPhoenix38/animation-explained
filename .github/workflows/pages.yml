@@ -29,10 +29,9 @@ jobs:
         run: npm ci
       - name: Build static site
         run: npm run build
-      - name: Add GitHub Pages landing page
+      - name: Add route index for GitHub Pages
         run: |
-          mkdir -p out/cursor-lab
-          cp out/cursor-lab/index.html out/cursor-lab/index.html
+          test -f out/cursor-lab/index.html
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
