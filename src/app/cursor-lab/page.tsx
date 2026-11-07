@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import "./cursor-lab.css";
 
 type CursorMode = "spotlight" | "magnetic" | "trail" | "crosshair";
 
