@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import OrbitalVisual from "./OrbitalVisual";
 import { motion, useSpring, useMotionValue, useTransform, useReducedMotion, useScroll } from "framer-motion";
 
 export default function Hero() {
@@ -98,6 +99,8 @@ export default function Hero() {
     >
       <h1 className="sr-only">Interactive Visual Explainers</h1>
 
+      <OrbitalVisual />
+
       {/* Background Layer — Blueprint Grid with Parallax and Perspective Tilt */}
       <motion.div
         style={{
@@ -107,7 +110,7 @@ export default function Hero() {
           rotateY: prefersReducedMotion ? 0 : gridRotateY,
           transformStyle: "preserve-3d",
         }}
-        className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center will-change-transform"
+        className="absolute inset-0 pointer-events-none z-[1] flex items-center justify-center will-change-transform"
       >
         <div 
           className="w-[120%] h-[120%] opacity-[0.04]"
@@ -168,9 +171,9 @@ export default function Hero() {
           AXIOM //
         </a>
         <nav className="hidden md:flex items-center gap-10 text-[10px] font-mono tracking-widest text-neutral-400 uppercase">
-          <a href="/explainers/gravity" className="hover:text-white transition-colors duration-200">01 / Gravity</a>
-          <a href="/explainers/networking" className="hover:text-white transition-colors duration-200">02 / Networking</a>
-          <a href="/explainers/ml" className="hover:text-white transition-colors duration-200">03 / Neural Nets</a>
+          <a href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/explainers/gravity`} className="hover:text-white transition-colors duration-200">01 / Gravity</a>
+          <a href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/explainers/networking`} className="hover:text-white transition-colors duration-200">02 / Networking</a>
+          <a href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/explainers/ml`} className="hover:text-white transition-colors duration-200">03 / Neural Nets</a>
         </nav>
         <a
           href="#concepts"
