@@ -120,3 +120,8 @@ a,button { -webkit-tap-highlight-color:transparent; }
 a:focus-visible,button:focus-visible { outline:1px solid #9de8d1; outline-offset:4px; }
 @media(max-width:767px) { .orbital-visual { width:100vw; height:55vh; right:-22vw; top:42%; opacity:.55; } .orbital-caption { display:none; } }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+
+.custom-cursor { position:fixed; top:0; left:0; width:0; height:0; z-index:9999; pointer-events:none; mix-blend-mode:screen; }
+.custom-cursor span { position:absolute; width:34px; height:34px; left:-17px; top:-17px; border:1px solid rgba(185,244,220,.68); border-radius:50%; background:rgba(126,222,190,.045); box-shadow:0 0 24px rgba(105,220,183,.12); }
+.custom-cursor i { position:absolute; width:4px; height:4px; left:-2px; top:-2px; border-radius:50%; background:#d7fff0; box-shadow:0 0 12px #9be8ce; }
+@media (hover:none),(pointer:coarse),(prefers-reduced-motion:reduce) { .custom-cursor { display:none!important; } }
