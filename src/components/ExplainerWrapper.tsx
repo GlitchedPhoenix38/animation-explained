@@ -108,7 +108,7 @@ export default function ExplainerWrapper({ concept }: ExplainerWrapperProps) {
       {/* Minimal technical header */}
       <header className="fixed top-6 left-6 right-6 md:right-auto md:w-[calc(50%-48px)] z-20 flex justify-between items-center border border-white/5 bg-black/60 backdrop-blur-md px-6 py-3.5 rounded-none shadow-lg">
         <a 
-          href="/" 
+          href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/`} 
           className="font-medium text-xs tracking-widest text-white focus:outline-none focus:ring-1 focus:ring-neutral-500 px-1 font-mono uppercase"
         >
           AXIOM // {concept.title}
