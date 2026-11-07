@@ -1,4 +1,4 @@
-name: Deploy cursor lab to GitHub Pages
+name: Deploy immersive explainer to GitHub Pages
 
 on:
   push:
@@ -17,6 +17,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_PAGES: "true"
+      NEXT_PUBLIC_BASE_PATH: "/animation-explained"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,8 +32,10 @@ jobs:
         run: npm ci
       - name: Build static site
         run: npm run build
-      - name: Add route index for GitHub Pages
+      - name: Verify static export
         run: |
+          test -f out/index.html
+          test -f out/explainers/gravity/index.html
           test -f out/cursor-lab/index.html
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
