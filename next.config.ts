@@ -1,10 +1,12 @@
 import type { NextConfig } from "next";
 
+const isGitHubPages = process.env.GITHUB_PAGES === "true";
+
 const nextConfig: NextConfig = {
-  // Export a static site for GitHub Pages while preserving the existing Vercel app.
   output: "export",
   images: { unoptimized: true },
   trailingSlash: true,
+  ...(isGitHubPages ? { basePath: "/animation-explained" } : {}),
 };
 
 export default nextConfig;
